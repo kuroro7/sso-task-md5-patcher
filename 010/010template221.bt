@@ -1,0 +1,1014 @@
+//------------------------------------------------
+//--- 010 Editor v14.0.1 Binary Template
+//
+//      File: 010taskdataX.bt
+//   Authors: Kuroro
+//   Version: 0.1
+//------------------------------------------------
+//typedef byte bool;
+
+const int32 TASK_DELIVER_TERMINATE_COUNT = 8;
+const int32 MAX_AWARD_MON_CTRL = 8;
+const int32 MAX_PREM_TASK_COUNT = 32;
+const int32 MAX_OCCUPATIONS = 32;
+const int32 MAX_RACES = 8;
+const int32 MAX_PREM_COTASK_COUNT = 4;
+const int32 MAX_MUTEX_TASK_COUNT = 32;
+const int32 MAX_LIVING_SKILLS = 32;
+const int32 MAX_PREM_SKILL_CNT = 8;
+const int32 MAX_PREM_BUFF_CNT = 8;
+const int32 MAX_PREM_ACCOMP_CNT = 8;
+const int32 MAX_TITLE_WANTED = 32;
+const int32 TASK_AWARD_TERMINATE_COUNT = 8;
+const int32 TASK_AWARD_INC_CNT_COUNT = 8;
+const int32 MAX_TITLE_AWARD = 8;
+const int32 TASK_AWARD_CLEAR_CNT_COUNT = 8;
+const int32 TASK_AWARD_CLEAR_REC_COUNT = 8;
+const int32 MAX_TEAM_MEM_NUM = 6;
+const int32 MAX_AWARD_SCALES = 32;
+
+
+struct Vector3 {
+    float x, y, z;    
+};
+
+enum <byte> bool {
+    False = 0,
+    True = 1    
+};
+
+enum <int32> TaskRelationShipType {
+    REL_INVALID = 0,
+    REL_MARRIAGE,
+    REL_COMPANION
+};
+
+enum <int32> TaskClearType {    enumCTNone = 0,      enumCTCountWeekly,        enumCTCountDaily,         enumCTRecordWeekly,       enumCTRecordDaily,        enumCTCountMonthly,        enumCTRecordMonthly };
+
+enum <int32> TaskDungeonType {    enumDTSingle,    enumDTTeam,    enumDTFamily,    enumDTDungeonMaster};
+
+enum <int32> TaskPartyMode {    PARTY_MODE_AUTO,    PARTY_MODE_TEAM_ONLY,    PARTY_MODE_RAID_ONLY};
+
+enum <int32> TaskOpType {    enumEq = 0,    enumLess,    enumMore};
+
+enum <int32> TaskVarType {    enumNum,    enumStage,    enumGlobal};
+
+enum <int32> TaskSimpleConditionType {    INVALID,    SOLO_CHALLENGE,    ACCOUNT_SECURITY,    HAS_PROMOTER,    ATOM_CHAIN_LEVEL,    PK_VALUE,    MONTHLY_CASH_RECHARGE,    VIP_LEVEL,    MVIP_LEVEL,    TEAM_WITH_RELATIONSHIP,    HIGH_EXP_TIME,    POPE};
+
+struct TaskTime {
+    int32 year;
+    int32 month;
+    int32 day;
+    int32 hour;
+    int32 min;
+    int32 wday;    
+};
+
+struct TaskFinishCountInfo {
+    uint32 taskId;
+    uint16 count;
+};
+
+struct MonsterControl {
+    int32 id;
+    float getProb; 
+    bool openClose;
+};
+
+struct TaskPremLivingSkill {
+    uint32 id;
+    uint32 level;
+    uint32 exp;    
+};
+
+struct TaskCompareKeyValue {
+    bool needComp;
+    TaskOpType taskOpType;
+    TaskVarType eLeftType;
+    int32 leftNum;
+    TaskVarType eRightType;
+    int32 rightNum;
+};
+
+struct TaskPremSkill {
+    int32 skillId;
+    int32 skillLev;
+    bool learned;  
+};    
+
+struct TaskPremBuff {
+    int32 buffId;
+    int32 minBuffStack;
+    bool bTaken;  
+};
+
+struct TaskMapPos {
+    int32 mapId;
+    Vector3 vec;  
+};
+
+struct TaskMapBox {
+    int32 mapId;
+    Vector3 min;
+    Vector3 max;  
+};
+
+struct TaskUnitProtect {
+    bool summonNew;
+    TaskMapPos summonPos;
+    float summonRange;
+    uint32 unitTemplId;
+    TaskMapBox boxToReach;
+};
+
+enum <int32> TaskFinishMethod {    enumTMNone = 0,    enumTMKillMonster = 1,    enumTMGetItem = 2,    enumTMMining = 3,    enumTMUseItem = 4,    enumTMTalkToNPC = 5,    enumTMReachSite = 6,    enumTMWaitTime = 7,    enumTMNPCReachSite = 8,    enumTMGetTitle = 9,    enumTMFinishTaskTimes = 10,    enumTMKillPlayerTimes = 11,    enumTMAchievementTimes = 12,    enumTMDoEmotionTimes = 13,    enumTMUseNPCService = 14,    enumTMBuff = 15,    enumTMPlayerLevel = 16,    enumTMSummonMonsterPolicy = 17,    enumTMMeetPremiseOfTask = 18};
+
+struct Option {
+    uint32 id;
+    wchar_t text[64];
+    uint32 param;
+    int32 paramAddon;     
+};
+
+
+struct Window {
+    uint32 id;
+    uint32 idParent;
+    int32 talkTextLen;
+    wchar_t talkText[talkTextLen];
+    int32 numOption;
+    Option options[numOption] <optimize=false>;
+    
+};
+
+struct TalkProc {
+    uint32 idTalk;
+    wchar_t text[64];
+    int32 numWindow;
+    Window windows[numWindow] <optimize=false>;
+};
+
+struct TaskSimpleCondition {
+    TaskSimpleConditionType type;
+    bool showByCondition;
+    int32 param1;
+    int32 param2;
+};
+
+enum <int32> TaskTmType {    taskTimeDate = 0,    taskTimeMonth,    taskTimeWeek,    taskTimeDay};
+
+struct TaskOpenTime {
+    TaskTmType type;
+    TaskTime startTime;
+    TaskTime endTime;
+};
+
+struct TaskItemWanted {
+    uint32 itemTemplId; // 1
+    bool commonItem; // 2
+    uint32 itemNum; // 3
+    uint32 checkInventory; // 4
+    bool deposit; // 5
+    
+    float prob; // 6
+    bool bind; // 7
+    int32 period; // 8
+    bool timeTable; // 9
+    byte dayOfWeek; // 10
+    byte hour; // 11
+    byte minute; // 12
+    uint16 lvMin; // 13
+    uint16 lvMax; // 14
+    uint32 occupation; // 15
+    byte gender; // 16
+    uint32 race; // 17
+};
+
+enum <int32> ReputationType {    REGION = 0,    LEAGUE = 1,    LEAGUE_ALL_INCREMENTAL = 2,    PLAYER_ALL_INCREMENTAL = 3,    LEAGUE_DAY_INCREMENTAL = 4,    LEAGUE_WEEK_INCREMENTAL = 5,    LEAGUE_MONTH_INCREMENTAL = 6,    PLAYER_DAY_INCREMENTAL = 7,    PLAYER_WEEK_INCREMENTAL = 8,    PLAYER_MONTH_INCREMENTAL = 9,    ACCOUNT = 10,    TEAM = 11,    MINI = 12};
+
+enum <int32> ReputationIncrementalType {    VALUE = 0,    YESTERDAY,    LAST_WEEK,    LAST_MONTH,    TODAY,    THIS_WEEK,    THIS_MONTH};
+
+struct TaskRepuWant {
+    ReputationType type; // 1
+    ReputationIncrementalType incType; // 2
+    int32 id; // 3
+    int32 min; // 4
+    int32 max; // 5
+};
+
+struct TaskAlbumWanted {
+    uint32 id; // 1
+    int32 count0; // 2
+    int32 count1; // 3
+    int32 count2; // 4
+};
+
+struct TaskSaintClothWanted {
+    uint32 id; // 1
+    bool equipped; // 2 
+};
+
+struct TaskFightPowerWanted {
+    uint32 index; // 1
+    int32 value;  // 2
+};
+
+struct TaskTeamMemWanted {
+    uint32 lvMin; // 1
+    uint32 lvMax; // 2
+    bool sameLeague; // 3
+    bool friend; // 4
+    int32 friendShipMin; // 5
+    int32 friendShipMax; // 6
+    uint32 occupation; // 7
+    uint32 gender; // 8
+    bool sameFamily; // 9
+    uint32 minCount; // 10
+    uint32 maxCount; // 11
+    int32 lvCanBeHigherThanLeader; // 12
+    int32 lvCanBeLowerThanLeader; // 13
+    uint32 task; // 14
+};
+
+struct MapPosition {
+    int32 id; // 1
+    Vector3 pos; // 2
+};
+
+struct TaskUnitSummon {
+    uint32 unitSummonPackId; // 1
+    float range; // 2
+    MapPosition position; // 3
+    uint32 relatedTaskId; // 4
+};
+
+enum <int32> TaskSimpleActionType {
+    TSAC_INVALID = 0,
+    TSAC_CLEAR_TASK_COUNTER    
+};
+
+struct TaskSimpleAction {
+    TaskSimpleActionType type; // 1
+    int32 param1; // 2
+    int32 param2; // 3
+};
+
+struct TaskMonsterWanted {
+    uint32 monsterId; // 1
+    uint32 monsterNum; // 2
+    uint32 monsterNumMax; // 3
+    uint32 dropItemId; // 4
+    uint32 dropItemCount; // 5
+    
+    bool dropCommonItems; // 6
+    float dropProbability; // 7
+    bool killerLv; // 8
+    bool shareKill; // 9
+    bool shareItemDrop; // 10
+    bool shareKillInRaid; // 11
+    bool shareItemDropInRaid; // 12
+};
+
+struct TaskInvestigateWanted {
+    uint32 mineId; // 1
+    unsigned byte numWant; // 2
+    uint32 itemId; // 3
+    float dropProbability; // 4
+    bool commonItem; // 5
+    uint32 dropItemCount; // 6
+};
+
+struct TaskUseItemWanted {
+    uint32 itemId; // 1
+    byte quantity; // 2
+};
+
+struct AwardLuckyDraw {
+    int32 id; // 1
+    int32 baseMoney; // 2
+    int32 baseBindMoney; // 3
+    int32 baseExp; // 4
+    int32 baseExp2; // 5
+    int32 fixConfig;  // 6
+};
+
+enum <int32> LuaEvent {
+    ON_DELIVER,
+    ON_FINISH,
+    ON_AWARD,
+    EVENT_TYPE_COUNT  
+};
+
+struct LuaEventConfig {
+    LuaEvent luaEvent; // 1
+    int32 extraTaskItem; // 2
+    int32 extraCommonItem; // 3
+};
+
+struct AwardTitle {
+    int32 titleId; // 1
+    float probability; // 2
+    uint32 lifeTime; // 3
+};
+
+struct TeamMulti {
+    uint32 memCnt; // 1
+    float multiProb;  // 2
+};
+
+enum <int32> TaskSimpleAwardType {    TSA_INVALID,    TSA_AWARD_TO_REFERER,    TSA_GROUP_AWARD,    TSA_CLOSE_SOLO_DUNGEON,    TSA_AWARD_TO_GOLDEN_REFERER,    TSA_HIGH_EXP_TIME,    TSA_SOUL_AMOR_ENABLE,    TSA_PROF_UPGRADE
+};
+
+struct TaskSimpleAward {
+    TaskSimpleAwardType type;
+    int32 param1;
+    int32 param2;
+};
+
+struct AwardItemsCand {
+    bool randChoose;
+    uint32 awardCommonItems;
+    uint32 awardTaskItems;
+    uint32 itemsWantedSz;
+    TaskItemWanted itemsWanted[itemsWantedSz] <optimize=false>;  
+};
+
+struct AwardReputation {
+    ReputationType type; // 1
+    int32 id; // 2
+    int32 num; // 3
+    bool set;  // 4
+};
+
+struct AwardFactor {
+    uint32 id; // 1
+    float factor; // 2
+};
+
+struct AwardChangeVar {
+    int32 changeKey; // 1
+    int32 num; // 2
+    bool changeByIncrement; // 3
+};
+
+struct AwardDisplayVar {
+    int32 id; // 1
+    bool isGlobal; // 2  
+};
+
+struct AwardData;
+
+struct AwardData {
+    byte dataBegin; // 1
+    uint32 goldNum <comment="GOLD">; // 2
+    bool goldRevise; // 3
+    int32 goldReviseLv; // 4
+    
+    int32 bindCash <comment="CASH VERDE">; // 5
+    uint32 exp <comment="EXP">; // 6
+    uint32 exp2 <comment="EXP2">; // 7
+    uint32 reviseTemplId; // 8
+    
+    bool expRevise; // 9
+    int32 expReviseLv; // 10
+    bool expFix; // 11
+    bool expDefaultRevise; // 12
+    
+    bool bindMoneyDefaultRevise; // 13
+    uint32 ap; // 14
+    
+    uint32 storedExp <comment="EXP ARMAZENADA">; // 15
+    uint32 storedExp2 <comment="EXP2 ARMAZENADA">; // 16
+    bool storedExpFixByDefaultTable; // 17
+    bool releaseStoredExp <comment="LIBERAR EXP ARMAZENADA">; // 18
+    
+    bool fillTeamExpPool; // 19
+    int32 battleFieldTaskScore; // 20
+    
+    uint32 newTask; // 21 
+    uint32 refreshAndIncrementCountStorageId; // 22
+    uint32 refreshAndClearCountStorageId; // 23
+    uint32 terminateTaskCnt; // 24
+    uint32 terminateTask[TASK_AWARD_TERMINATE_COUNT]; // 25
+    
+    uint32 incrementTaskCounterCnt; // 26
+    uint32 incrementTaskCounter[TASK_AWARD_INC_CNT_COUNT]; // 27
+    
+    uint32 sp; // 28
+    uint32 reputation; // 29
+    uint32 prosperity; // 30
+    
+    uint32 titleCnt; // 31
+    AwardTitle title[MAX_TITLE_AWARD]; // 32
+    
+    bool randomTitle; // 33
+    int32 pkValue; // 34
+    bool resetPkValue; // 35
+    bool divorce; // 36
+    
+    bool friendShipHidePromote; // 37
+    uint32 newPeriod; // 38
+    uint32 newRelayStation; // 39
+    uint32 storehouseSize; // 40
+    
+    int32 inventorySize; // 41
+    uint32 petInventorySize; // 42
+    uint32 petCallInvSize; // 43
+    uint32 petCombInvSize; // 44
+    
+    uint32 petHatchInvSize; // 45
+    uint32 furyULimit; // 46
+    uint32 newProfession; // 47
+    int32 transWorldId  <comment="TELEPORTA">; // 48
+    
+    bool onlyTeleportInSameMap; // 49
+    bool teleportAcrossServer; // 50
+    
+    Vector3 transPoint  <comment="COORDENADA DO TELEPORTE">; // 51
+    bool teleportNeedsConfirmation; // 52
+    uint32 transBackWorldId  <comment="RETORNO DE TELEPORTE">; // 53
+    Vector3 transBackPoint  <comment="COORDENADA DE RETORNO DE TELEPORTE">; // 54
+    
+    bool setHomeNeedsConfirmation; // 55
+    int32 monsterControl; // 56
+    bool triggerControl; // 57
+    int32 buffId; // 58
+    int32 buffLv; // 59
+    
+    uint32 clearCountTaskCnt; // 60
+    uint32 clearCountTask[TASK_AWARD_CLEAR_CNT_COUNT]; // 61
+    
+    uint32 clearTaskRecCnt; // 62
+    uint32 clearTaskRec[TASK_AWARD_CLEAR_REC_COUNT]; // 63
+    
+    uint32 doubleExpTime; // 64
+    bool multi; // 65
+    int32 numType; // 66
+    int32 num; // 67
+    
+    int32 skillId  <comment="SKILL">; // 68
+    int32 skillLv  <comment="LV DA SKILL">; // 69
+    int32 delSkillId  <comment="APAGA SKILL">; // 70
+    
+    uint32 monControlCnt; // 71
+    MonsterControl monControl[MAX_AWARD_MON_CTRL]; // 72
+    
+    bool ranMonControl; // 73
+    uint32 upgradeLivingSkillId; // 74
+    uint32 forgetLivingSkillId; // 75
+    bool awardSpecifyRole; // 76
+    
+    uint32 roleSelected; // 77
+    float awardSpecifyRoleDis; // 78
+    bool teamMulti; // 79
+    
+    uint32 teamMultiCnt; // 80
+    TeamMulti teamMultiList[MAX_TEAM_MEM_NUM]; // 81
+    
+    uint32 teamMultiAwardSel; // 82
+    uint32 forceMove; // 83
+    uint32 systemFail; // 84
+    uint32 cameraMove; // 85
+    uint32 followTask; // 86
+    int32 bindMoney <comment="SILVER">; // 87
+    
+    bool discoverMap; // 88
+    int32 discoverMapId; // 89
+    
+    int32 mineType; // 90
+    bool mineShow; // 91
+    
+    int32 learnEmotion; // 92
+    
+    int32 friendShip; // 93
+    uint32 friendExpShareConfig; // 94
+    uint32 friendShareLvMax; // 95
+    
+    int32 leagueConst; // 96
+    int32 setLeagueLv; // 97
+    uint32 factionStorehouseSize; // 98
+    bool clearLeagueAcceptCounter; // 99
+    
+    bool enableCosmos; // 100
+ 
+    AwardLuckyDraw luckyDraw; // 101
+    
+    byte dataEnd; // 102
+    
+    uint32 simpleAwardsSz; // 103
+    TaskSimpleAward simpleAwards[simpleAwardsSz] <optimize=false>; // 104
+    
+    uint32 candItemsSz; // 105
+    AwardItemsCand candItems[candItemsSz] <optimize=false, comment="ITEMS">; // 106
+    
+    uint32 reputationsSz; // 107
+    AwardReputation reputations[reputationsSz] <optimize=false, comment="REPUTAÇÕES">; // 108
+    
+    uint32 factorsSz; // 109
+    AwardFactor factors[factorsSz] <optimize=false>; // 110
+    
+    uint32 albumSz; // 111
+    uint32 album[albumSz]; // 112
+    
+    uint32 saintClothesSz; // 113
+    uint32 saintClothes[saintClothesSz] <optimize=false, comment="ARMADURAS">; // 114
+    
+    uint32 unitSummonsSz; // 115
+    TaskUnitSummon unitSummons[unitSummonsSz] <optimize=false>; // 116
+    
+    uint32 mineSummonsSz; // 117
+    uint32 mineSummons[mineSummonsSz]; // 118
+    
+    uint32 setStageVarSz; // 119
+    AwardChangeVar setStageVar[setStageVarSz] <optimize=false>; // 120
+    
+    uint32 displayVarSz; // 121
+    AwardDisplayVar displayVar[displayVarSz] <optimize=false>; // 122
+    
+    bool hasAwardSpecifyRolePointer; // 123
+    
+    if (hasAwardSpecifyRolePointer == True) {
+        AwardData awardSpecifyRolePointer;  // 124   
+    }
+};
+
+struct AwardRatioScale {
+    uint32 scales;
+    float ratios[scales] <comment="PROBABILIDADES">;
+    
+    uint32 awardsSz;
+    AwardData awards[awardsSz] <optimize=false, comment="RECOMPENSAS">;
+};
+
+struct AwardItemsScale {
+    uint32 itemId;
+    uint32 scales;
+    uint32 counts[scales];
+      
+    uint32 awardsSz;
+    AwardData awards[awardsSz] <optimize=false>;
+};
+
+struct AwardCountScale {
+    uint32 scales;
+    uint32 counts[scales] <comment="ESCALAS">;
+      
+    uint32 awardsSz;
+    AwardData awards[awardsSz] <optimize=false, comment="RECOMPENSAS">;
+};
+
+struct Task;
+
+struct Task {
+    int16 version;
+    uint32 id;
+    int32 baseType; // 2
+    int32 storeRarityLevel; // 3
+    bool luaTask; // 4
+    bool enableWhenCrossServer; // 5
+    bool noServerErrorNotivy; // 6
+    bool canShare; // 7
+    bool hideNameSubtask; // 8
+    int32 taskPurpose; // 9
+    int32 star; // 10
+    int32 quality; // 11
+    bool useCompassLink; // 12
+    int32 compassRouteId; // 13
+    uint32 timeLimit; // 14
+    bool hideTimeLimit; // 15
+    bool absTime; // 16
+    bool taskUseSpecialDlgOnDeliver; // 17
+    bool taskUseSpecialDlgOnAward; // 18
+    bool awardWaitForClientNotify; // 19
+    int32 availFrequence; // 20
+    int32 timeInterval; // 21
+    bool showByTime; // 22
+    bool bithDay; // 23
+    int32 subTaskMode; // 24
+    bool parentAlsoFail; // 25
+    bool parentAlsoSuccess; // 26
+    bool canGiveUp; // 27
+    bool canRedo; // 28
+    bool canRedoAfterFailure; // 29
+    bool waitForGiveUpOnFailure; // 30
+    bool clearAsGiveUp; // 31
+    bool needRecord; // 32
+    bool failAsPlayerDie; // 33
+    bool failAsLogout; // 34
+    uint32 maxReceiver; // 35
+    bool delvInZone; // 36
+    uint32 delvInWorld; // 37
+    Vector3 delvMinVert; // 38
+    Vector3 delvMaxVert; // 39
+    bool outZoneFail; // 40
+    uint32 outZoneWorldId; // 41
+    Vector3 outZoneMinVert; // 42
+    Vector3 outZoneMaxVert; // 43
+    bool failOnBuffCondition; // 44
+    bool transferTo; // 45
+    uint32 transferWorldId; // 46
+    Vector3 transferPoint; // 47
+    bool onlyTeleportInSameMap; // 48
+    bool teleportNeedsConfirmation; // 49
+    bool autoDeliver; // 50
+    bool clientTriggersManually; // 51
+    bool deathTrigger; // 52
+    bool clearAcquired; // 53
+    uint32 suitLevel; // 54
+    bool suitLevelEx; // 55
+    bool showPrompt; // 56
+    uint32 delvNpc; // 57
+    uint32 awardNpc; // 58
+    bool hideAwardNpcInTrace; // 59
+    bool skillTask; // 60
+    bool canSeekOut; // 61
+    bool showDirection; // 62
+    uint32 rank; // 63
+    bool marriage; // 64
+    TaskRelationShipType createRelationship; // 65
+    bool shareByFamily; // 66
+    bool recFinishCount; // 67
+    bool recFinishCounGlobal; // 68
+    bool incEvenWhenFail; // 69
+    uint32 maxFinishCount <comment="QUANTIDADE DE VEZES QUE PODE PEGAR A QUEST">; // 70
+    TaskTime finishClearTime; // 71
+    TaskClearType finishTimeType; // 72
+    uint32 rechargeCounterTaskId; // 73
+    bool pursueTradeTask; // 74
+    uint32 pursueTradeTemplateID; // 75
+    int32 topic; // 76
+    uint32 cameraMove; // 77
+    bool sendMessageOnDeliver; // 78
+    int32 messageChannelOnAward; // 79
+    bool sendMessageOnAward; // 80
+    int32 messageChannelOnAward; // 81
+    uint32 terminateCount; // 82
+    uint32 terminateTask[TASK_DELIVER_TERMINATE_COUNT]; // 83
+    bool finishTask; // 84
+    bool clearSummonedUnitsOnSuccess; // 85
+    bool clearSummonedUnitsOnFailed; // 86
+    uint32 monCtrlCnt; // 87
+    MonsterControl monCtrl[MAX_AWARD_MON_CTRL]; // 88
+    bool ranMonCtrl; // 89
+    bool createDungeon; // 90
+    bool enterDungeon; // 91
+    int32 dungeonTemplateID; // 92
+    TaskDungeonType dungeonType; // 93
+    bool emotionTrig; // 94
+    int32 emotionTrigID; // 95
+    uint32 QTETrigID; // 96
+    uint32 premLvMin; // 97
+    uint32 premLvMax; // 98
+    bool showByLv; // 99
+    uint32 collaborationPool; // 100
+    uint32 premCosmosLvMin; // 101
+    uint32 premCosmosLvMax; // 102
+    bool showByCosmosLv; // 103
+    int32 talismanValueMin; // 104
+    int32 talismanValueMax; // 105
+    bool showByItems; // 106
+    bool premItemsCond; // 107
+    bool premTitleCond; // 108
+    uint32 premiseDeposit; // 109
+    bool showByDeposit; // 110
+    int32 premBattleScoreMin; // 111
+    int32 premBattleScoreMax; // 112
+    bool depositBattleScore; // 113
+    bool premRepuAny; // 114
+    bool premRepuDeposit; // 115
+    bool showByRegionRepu; // 116
+    uint32 premInventorySizeMax; // 117
+    bool showByInventorySize; // 118
+    uint32 premBankSizeMax; // 119
+    bool showByBankSize; // 120
+    uint32 vipLevel; // 121
+    uint32 monthlyVipLevel; // 122
+    uint32 premiseTaskCount; // 123
+    uint32 premiseTasks[MAX_PREM_TASK_COUNT]; // 124
+    uint32 preTaskCond; // 125
+    bool showByPreTask; // 126
+    uint32 premFinishTaskCount; // 127
+    TaskFinishCountInfo premFinishTasks[MAX_PREM_TASK_COUNT]; // 128
+    uint32 premFinishTaskCounterCond; // 129
+    uint32 premGlobalCount; // 130
+    uint32 premGlobalTask; // 131
+    uint32 premisePeriod; // 132
+    bool showByPeriod; // 133
+    uint32 premLeagueCaste; // 134
+    uint32 premLeagueLvMin; // 135
+    uint32 premLeagueLvMax; // 136
+    uint32 premConstMin; // 137
+    uint32 premConstMax; // 138
+    bool showByLeague; // 139
+    uint32 premLeagueAcceptCounterMax; // 140
+    bool showByLeagueAcceptCounter; // 141
+    uint32 gender; // 142
+    bool showByGender; // 143
+    uint32 occupations; // 144
+    uint32 occupationsList[MAX_OCCUPATIONS]; // 145
+    bool showByOccupation; // 146
+    uint32 races; // 147
+    uint32 racesList[MAX_RACES]; // 148
+    bool showByRace; // 149
+    int32 premiseSpouse; // 150
+    bool showBySpouse; // 151
+    uint32 premConstellationMask; // 152
+    bool showByConstellation; // 153
+    bool premAlbumCond; // 154
+    int32 premAlbumPoint; // 155
+    uint32 doubleExpTimeMax; // 156
+    bool showByDoubleExpTime; // 157
+    uint32 premiseCotaskCnt; // 158
+    uint32 premiseCotask[MAX_PREM_COTASK_COUNT]; // 159
+    uint32 cotaskCond; // 160 
+    bool showByCotask; // 161
+    uint32 mutexTaskCount; // 162
+    uint32 mutexTaks[MAX_MUTEX_TASK_COUNT]; // 163
+    int32 mutexType[MAX_MUTEX_TASK_COUNT]; // 164
+    uint32 mutexTaskCond; // 165
+    bool showByMutexTask; // 166
+    uint32 premLivingSkillCount; // 167
+    TaskPremLivingSkill premLivingSkills[MAX_LIVING_SKILLS]; // 168
+    uint32 specialAward; // 169
+    int32 pkValueMin; // 170
+    int32 pkValueMax; // 171
+    bool premiseGm; // 172
+    uint32 changedRace; // 173
+    uint32 changedVisualize; // 174
+    bool teamwork; // 175
+    TaskPartyMode enumPartyMode; // 176
+    bool raidMode; // 177
+    bool recoveredByTeam; // 178
+    bool sharedTask; // 179
+    bool checkTeammate; // 180
+    float teammateDist; // 181
+    bool allFail; // 182
+    bool capFail; // 183
+    bool capSuccess; // 184
+    float successDist; // 185
+    bool dismissAsSelfFail; // 186
+    bool recoverCheckMem; // 187
+    float recoverMemDist; // 188
+    bool showByTeam; // 189
+    
+    // HALFWAY
+    
+    TaskCompareKeyValue premKeyValue; // 190
+    uint32 premSkillCnt; // 191
+    TaskPremSkill premSkill[MAX_PREM_SKILL_CNT]; // 192
+    bool premSkillCond; // 193
+    uint premBuffCnt; // 194
+    TaskPremBuff premBuff[MAX_PREM_BUFF_CNT]; // 195
+    bool premBuffCond; // 196
+    bool showByBuff; // 197
+    uint32 premAccompCnt; // 198
+    uint32 premAccompId[MAX_PREM_ACCOMP_CNT]; // 199
+    bool premAccompCond; // 200
+    int32 premAchievementPoint; // 201
+    int32 bindMoney; // 202
+    bool showByBindMoney; // 203
+    bool discoverMap; // 204
+    int32 discoverMapId; // 205
+    TaskFinishMethod enumMethod; // 206
+    uint32 enumFinishType; // 207
+    bool joinIdSetCounting; // 208
+    
+    // -------------------------------------------------------------------------------------
+    byte __offset01[325];// 325 more bytes in 221 here -------------------------------------
+    // -------------------------------------------------------------------------------------
+    
+    bool notClearCommonItem; // 209 -- True(220) False(221)
+    bool setTop; // 209.1
+    uint32 goldWanted; // 210
+    uint32 bindMoneyWanted; // 211
+    bool notGivenMine; // 212
+    Vector3 reachSiteMin; // 213
+    Vector3 reachSiteMax; // 214
+    uint32 reachSiteId; // 215
+    uint32 waitTime; // 216
+    uint32 titleWantedNum; // 217
+    int16 titleWanted[MAX_TITLE_WANTED]; // 218
+    uint32 finishTaskId; // 219
+    uint32 finishTaskTimes; // 220
+    Vector3 killPlayerSiteMin; // 221
+    Vector3 killPlayerSiteMax; // 222
+    uint32 killPlayerSiteId; // 223
+    int32 killPlayerTimes; // 224
+    float killPlayerProb; // 225
+    int32 tmAchievementID; // 226
+    int32 tmAchievementTimes; // 227
+    float tmAchievementProb; // 228
+    int32 tmDoEmotionId; // 229
+    int32 tmDoEmotionTimes; // 230
+    float tmDoEmotionProb; // 231
+    bool takeAwayUnusedItemsOnEnd; // 232
+    uint32 tmSimpleServiceId; // 233
+    uint32 tmComplexServiceId; // 234
+    uint32 tmServiceNpcId; // 235
+    uint32 tmBuffCnt; // 236
+    TaskPremBuff tmBuff[MAX_PREM_BUFF_CNT]; // 237
+    bool tmBuffCond; // 238
+    uint32 playerLevel; // 239
+    bool finishWhenSummonMonsterLost; // 240
+    bool taskPremiseNeedMeetCond; // 241
+    TaskUnitProtect unitProtect; // 242
+    float unitProtectWarningDist; // 243
+    float unitProtectFailDist; // 244
+    bool hasFinishTaskTimes; // 245
+    uint32 finishLev; // 246
+    bool showByFinLev; // 247
+    uint32 finChangedRace; // 248
+    uint32 finChangedVisualize; // 249
+    uint32 finBuffCnt; // 250
+    TaskPremBuff finBuff[MAX_PREM_BUFF_CNT]; // 251
+    bool finBuffCond; // 252
+    TaskCompareKeyValue finKeyValue; // 253
+    uint32 takeCustomCountItemOnAward; // 254
+    uint32 taskBuffId; // 255
+    int32 taskBuffLv; // 256
+    uint32 taskBuffDespellId; // 257
+    bool onNewPopup; // 258
+    uint32 onNewSoundId; // 259
+    uint32 onNewGfxId; // 260
+    bool onNewGfxBroadcast; // 261
+    int32 onNewAnima; // 262
+    uint32 onNewForceMove; // 263
+    bool onNewConfirm; // 264
+    bool onCompletePopup; // 265
+    uint32 onCompleteSoundId; // 266
+    uint32 onCompleteGfxId; // 267
+    bool onCompleteGfxBroadCast; // 268
+    int32 onCompleteAnima; // 269
+    bool onCompleteConfirm; // 270
+    bool onFailPopup; // 271
+    uint32 onFailSoundId; // 272
+    uint32 onFailGfxId; // 273
+    bool onFailGfxBroadCast; // 274
+    uint32 awardTypeS; // 275
+    uint32 awardTypeF; // 276
+    uint32 parent; // 277
+    uint32 prevSibling; // 278
+    uint32 nextSibling <comment="ID DA PRÓXIMA TASK">; // 279
+    uint32 firstChild; // 280
+    
+    int32 nameSz <comment="TAMANHO DO NOME">;
+    wchar_t name[nameSz] <comment="NOME">; // 281
+
+    int32 nameSuffixSz;
+    wchar_t nameSuffix[nameSuffixSz]; // 282
+    
+    int32 descriptSz <comment="TAMANHO DA DESCRIÇÃO">;
+    wchar_t descript[descriptSz] <comment="DESCRIÇÃO">; // 283
+    
+    int32 onNewTributeSz;
+    wchar_t onNewTribute[onNewTributeSz]; // 284
+    
+    int32 onCompleteTributeSz;
+    wchar_t onCompleteTribute[onCompleteTributeSz]; // 285
+    
+    int32 textBgPathSz;
+    wchar_t textBgPath[textBgPathSz]; // 286
+    
+    struct {
+        int32 onNewPopupSz;
+        wchar_t onNewPopup[onNewPopupSz]; // 287
+    } onNewPopupData;
+    
+    int32 onCompletePopupSz;
+    wchar_t onCompletePoput[onCompletePopupSz]; // 288
+    
+    int32 giveUpConfirmSz;
+    wchar_t giveUpConfirm[giveUpConfirmSz]; // 289
+    
+    struct {
+        int32 onNewConfirmSz;
+        wchar_t onNewConfirm[onNewConfirmSz]; // 290
+    } onNewConfirmData;
+    
+    struct {
+        int32 onCompleteConfirmSz;
+        wchar_t onCompleteConfirm[onCompleteConfirmSz]; // 291
+    } onCompleteConfirmData;
+    
+    int32 methodTraceSz;
+    wchar_t methodTrace[methodTraceSz]; // 292
+    
+    int32 methodStringSz;
+    wchar_t methodString[methodStringSz]; // 293
+    
+    int32 categorySz;
+    wchar_t category[categorySz] <comment="CATEGORIA">; // 294
+    
+    int32 unitProtectWarningSz;
+    wchar_t unitProtectWarning[unitProtectWarningSz]; // 295
+    
+    int32 unitProtectFailedSz;
+    wchar_t unitProtectFailed[unitProtectFailedSz]; // 296
+    
+    TalkProc delvTaskTalk; // 297
+    TalkProc unqualifiedTalk; // 298
+    TalkProc exeTalk; // 299
+    TalkProc awardTalk; // 300
+    
+    uint32 premSimpleSz; // 331
+    TaskSimpleCondition premSimple[premSimpleSz]; // 332
+    
+    uint32 taskOpenTimeSz; // 333
+    TaskOpenTime openTime[taskOpenTimeSz]; // 334
+    
+    uint32 premItemsSz; // 335
+    TaskItemWanted premItems[premItemsSz]; // 336
+    
+    uint32 premTitlesSz; // 337
+    uint16 premTitles[premTitlesSz]; // 338
+    
+    uint32 premRepuSz; // 339
+    TaskRepuWant premRepu[premRepuSz]; // 340
+    
+    uint32 premAlbumsSz; // 341
+    TaskAlbumWanted premAlbums[premAlbumsSz]; // 342
+    
+    uint32 premSaintClothesSz; // 343
+    TaskSaintClothWanted premSaintClothes[premSaintClothesSz]; // 344
+    
+    uint32 premFightPowerWantedSz; // 345
+    TaskFightPowerWanted premFightPowerWanted[premFightPowerWantedSz]; // 346
+    
+    uint32 premTeamMembersWantedSz; // 347
+    TaskTeamMemWanted premTeamMembersWanted[premTeamMembersWantedSz]; // 348
+    
+    uint32 giveItemsSz; // 349
+    TaskItemWanted giveItems[giveItemsSz]; // 350
+    
+    uint32 unitSummonSz; // 351
+    TaskUnitSummon unitSummon[unitSummonSz]; // 352
+    
+    uint32 actionOnDeliverSz; // 353
+    TaskSimpleAction actionOnDeliver[actionOnDeliverSz]; // 354
+    
+    uint32 monsterWantedSz; // 355
+    TaskMonsterWanted monsterWanted[monsterWantedSz]; // 356
+    
+    uint32 itemsWantedSz; // 357
+    TaskItemWanted itemsWanted[itemsWantedSz]; // 358
+    
+    uint32 investigateWantedSz; // 359
+    TaskInvestigateWanted investigateWanted[investigateWantedSz]; // 360
+    
+    uint32 useItemWantedSz; // 362
+    TaskUseItemWanted useItemWanted[useItemWantedSz]; // 363
+    
+    uint32 premiseNeedMeetSz; // 364
+    uint32 premiseNeedMeet[premiseNeedMeetSz]; // 365
+    
+    uint32 failOnBuffSz; // 366
+    TaskPremBuff failOnBuff[failOnBuffSz]; // 367
+    
+    uint32 luaEventConfigSz; // 368
+    LuaEventConfig luaEventConfig[luaEventConfigSz]; // 369
+    
+    AwardData awardS <comment="PREMIAÇÃO AO COMPLETAR">; // 370
+    AwardData awardF; // 371
+    
+    AwardRatioScale awardByRatioS <comment="PREMIAÇÃO COM PROBABILIDADE">; // 372
+    AwardRatioScale awardByRatioF; // 373
+    
+    AwardItemsScale awardByItemsS; // 374
+    AwardItemsScale awardByItemsF; // 375
+    
+    AwardCountScale awardByCountS; // 376
+    AwardCountScale awardByCountF; // 377
+    
+    AwardCountScale awardByOccupationS <comment="PREMIAÇÃO POR CLASSE">; // 378
+    AwardCountScale awardByOccupationF; // 379
+    
+    AwardCountScale awardByLvS <comment="PREMIAÇÃO POR LV">; // 380
+    AwardCountScale awardByLvF; // 381
+    
+    // -------------------------------------------------------------------------------------
+    //byte __offset2[16]; // Only for 221 version. 
+    uint32 __phantomCounter1;
+    
+    if (__phantomCounter1 == 0) {
+        byte __space[12];    
+        
+        int32 subTaskCount <comment="QTD SUBTASKS">; // 382
+        Task subTasks[subTaskCount] <optimize=false, comment="SUBTASKS">; // 383
+    } else {
+
+    }    
+    // -------------------------------------------------------------------------------------
+    
+};
+
+struct FILE {
+    uint32 magic;
+    uint32 itemCount;
+    int32 offsets[itemCount];
+   
+    local int i;
+    for (i = 0; i < itemCount; i++) {
+        FSeek(offsets[i]);
+        Task task;
+    }
+} file;
